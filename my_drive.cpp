@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <iostream>
+
+using namespace std;
 
 //CARACTERISTICAS DO DISCO
 #define TRILHAS_PC 5
@@ -29,7 +32,10 @@ typedef struct fatent_s {
 } fatent;
 
 void escreverArquivo(){
-
+    string filename;
+    cout << "___Escrever arquivo___" << endl;
+    cout << "Digite nome do arquivo: ";
+    cin >> filename;
 }
 
 void lerArquivo(){
