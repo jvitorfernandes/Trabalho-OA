@@ -2,6 +2,32 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+//CARACTERISTICAS DO DISCO
+#define TRILHAS_PC 5
+#define SETORES_PT 60
+#define TRILHAS_PF 10
+#define T_SETOR 512
+#define T_CLUSTER 4
+#define t_SEEK_med 4
+#define t_SEEK_min 1
+#define t_LATENCIA_med 6
+#define t_TRANSF 12
+
+typedef struct block { unsigned char bytes_s[T_SETOR]; } block;
+typedef struct sector_array { block sector[SETORES_PT]; } sector_array;
+typedef struct track_array { sector_array track[TRILHAS_PC]; } track_array;
+
+typedef struct fatlist_s {
+    char file_name[100];
+    unsigned int first_sector;
+} fatlist;
+
+typedef struct fatent_s {
+    unsigned int used;
+    unsigned int eof;
+    unsigned int next;
+} fatent;
+
 void escreverArquivo(){
 
 }
