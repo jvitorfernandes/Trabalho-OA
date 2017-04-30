@@ -31,6 +31,8 @@ typedef struct fatent_s {
     unsigned int next;
 } fatent;
 
+void obtemAcao();
+
 void escreverArquivo(){
     char *cg;
     char ch, filename[256];
@@ -47,9 +49,22 @@ void escreverArquivo(){
 
     printf("\n\nDigite seu texto, para finalizar CTRL+C.\n");
     while (fread(&ch, 1, 1, stdin) != 0)
-        fwrite(&ch, 1, 1, file);
+        fwrite(&ch, 1, 1, file);//implementar forma de sair da escrita
     //TODO nao funcionando ainda funcao de escrita em arquivo
     fclose(file);
+    printf("\n------------------------------------\n");
+    printf(" 1. Escrever novo arquivo\n 2. Voltar ao menu");
+    printf(" Digite a opção desejada: ");
+    int opcao;
+    scanf("%d", &opcao);
+    switch (opcao){
+        case 1:
+            escreverArquivo();
+            break;
+        case 2:
+            obtemAcao();
+            break;
+    }
 }
 
 void lerArquivo(){
@@ -82,7 +97,7 @@ int exibirMenu()
     return opcao;
 }
 
-int main(){
+void obtemAcao(){
     int opcao;
 
     do {
@@ -112,5 +127,9 @@ int main(){
         }
     } while (opcao != 5);
 
+}
+
+int main(){
+    obtemAcao();
     return 0;
 }
