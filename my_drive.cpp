@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <iostream>
+#include <string.h>
 
 using namespace std;
 
@@ -32,10 +32,24 @@ typedef struct fatent_s {
 } fatent;
 
 void escreverArquivo(){
-    string filename;
-    cout << "___Escrever arquivo___" << endl;
-    cout << "Digite nome do arquivo: ";
-    cin >> filename;
+    char *cg;
+    char ch, filename[256];
+    FILE * file;
+    system("clear");
+    printf("___Escrever arquivo___\n");
+    printf("Digite nome do arquivo: ");
+    scanf("\n");
+    fgets(filename, sizeof(filename), stdin);
+    filename[strcspn(filename, "\n")] = 0;
+    printf("Opening \'%s\' file.", filename);
+
+    file = fopen(filename, "w");
+
+    printf("\n\nDigite seu texto, para finalizar CTRL+C.\n");
+    while (fread(&ch, 1, 1, stdin) != 0)
+        fwrite(&ch, 1, 1, file);
+    //TODO nao funcionando ainda funcao de escrita em arquivo
+    fclose(file);
 }
 
 void lerArquivo(){
