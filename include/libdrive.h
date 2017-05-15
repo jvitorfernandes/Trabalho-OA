@@ -32,6 +32,11 @@ typedef struct FatTable {
 } FatTable;
 
 /**
+ * Gets the sector number of the given physical address
+ */
+int fat_physical_to_sector(int cylinder, int track, int sector);
+
+/**
  * This function searches for the file with the given name in the FAT table,
  * returning the corresponding entry if the file is found or NULL otherwise.
  */
