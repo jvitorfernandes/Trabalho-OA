@@ -3,11 +3,11 @@ CC = g++
 OBJ = obj
 BIN = bin
 SRC = src
+LIB = lib
 INCLUDE = include
 TEST = test
 
 MAIN_TARGET = menu-main
-
 SRC_FILES = libdrive menu-main
 HEADERS_FILES = libdrive.h
 TEST_FILES = test-drive-simple

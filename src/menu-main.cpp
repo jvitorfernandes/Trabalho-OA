@@ -50,7 +50,7 @@ void lerArquivo(){
     if (file.is_open()) {
         cout << "\n----------------------------" << infile << endl;
         while (getline(file, line)) {
-	        cout << line << endl;
+            cout << line << endl;
         }
         cout << "----------------------------\n";
         file.close();
