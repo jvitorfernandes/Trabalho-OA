@@ -4,6 +4,7 @@
 #include <iostream>
 #include <istream>
 #include <fstream>
+#include <vector>
 
 
 using namespace std;
@@ -43,7 +44,7 @@ void escreverArquivo(){
 }
 
 void lerArquivo(){
-  string infile, line;
+    string infile, line;
     fstream file;
     system("clear");
     cout << "___Ler arquivo___\n";
@@ -70,7 +71,27 @@ void apagarArquivo(){
 }
 
 void mostrarTabelaFAT(){
-
+    struct filetype {
+        string name;
+        int size;
+        int pos;
+    };
+    vector<filetype> fat_ex;
+    system("clear");
+    fat_ex.push_back(filetype());
+    fat_ex.push_back(filetype());
+    fat_ex.push_back(filetype());
+    fat_ex[0] = {"file1", 1 ,5};
+    fat_ex[1] = {"file2", 7 ,2};
+    fat_ex[2] = {"file3", 3 ,9};
+    cout << "NOME:\tTAMANHO EM DISCO:\t LOCALIZAÇÃO" << endl;
+    for (auto const& file: fat_ex) {
+        cout << file.name<< "\t\t" << file.size << "\t\t" << file.pos << endl;
+    }
+    cout << "ENTER para sair.";
+    cin.clear();
+    cin.get();
+    cin.get();
 }
 
 void exibirMenu()
@@ -109,7 +130,7 @@ int obtemAcao(){
             return 0;
         default:
             cout << "\n Opcao invalida!\n";
-            usleep(1000000);
+            usleep(1000);
             return 1;
     }
     return opcao;
