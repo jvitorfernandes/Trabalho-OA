@@ -10,7 +10,7 @@ using namespace std;
 int obtemAcao();
 
 void escreverArquivo(){
-    string input, filename;
+    string input, filename, aux;
     ofstream file;
     system("clear");
     cout << "___Escrever arquivo___\n";
@@ -25,11 +25,14 @@ void escreverArquivo(){
 
     file.open(filename);
 
-    cout << "\n\nDigite seu texto, para finalizar CTRL+D duas vezes.\n";
+    cout << "\n\nDigite seu texto, para finalizar CTRL+D.\n";
     cout << "------------------------------------\n";
     while(cin >> input){
-        file << input << '\n';
+        aux += input;
+        aux += ' ';
     }
+    file << aux;
+    file << endl;
     //TODO :: Função para inserir no disco.
     file.close();
     cout << "\n------------------------------------escrito...\n";
