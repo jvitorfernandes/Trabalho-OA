@@ -1,2 +1,6 @@
 *.o
 *.out
+
+obj/
+bin/
+test/bin/
