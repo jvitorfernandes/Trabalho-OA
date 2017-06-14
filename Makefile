@@ -8,8 +8,8 @@ INCLUDE = include
 TEST = test
 
 MAIN_TARGET = menu-main
-SRC_FILES = libdrive menu-main
-HEADERS_FILES = libdrive.h
+SRC_FILES = libfat menu-main
+HEADERS_FILES = libfat.h
 TEST_FILES = test-drive-simple
 
 # Flags to compile the tests

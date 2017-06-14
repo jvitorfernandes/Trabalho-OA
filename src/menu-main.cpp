@@ -5,6 +5,7 @@
 #include <istream>
 #include <fstream>
 
+
 using namespace std;
 
 int obtemAcao();
