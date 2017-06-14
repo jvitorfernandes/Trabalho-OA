@@ -1,46 +1,64 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <iostream>
+#include <istream>
+#include <fstream>
 
-void obtemAcao();
+using namespace std;
+
+int obtemAcao();
 
 void escreverArquivo(){
-    char *cg;
-    char ch, filename[256];
-    FILE * file;
+    string input, filename;
+    ofstream file;
     system("clear");
-    printf("___Escrever arquivo___\n");
-    printf("Digite nome do arquivo: ");
-    scanf("\n");
-    fgets(filename, sizeof(filename), stdin);
-    filename[strcspn(filename, "\n")] = 0;
-    printf("Opening \'%s\' file.", filename);
-
-    file = fopen(filename, "w");
-
-    printf("\n\nDigite seu texto, para finalizar CTRL+C.\n");
-    while (fread(&ch, 1, 1, stdin) != 0)
-        fwrite(&ch, 1, 1, file);//implementar forma de sair da escrita
-    //TODO nao funcionando ainda funcao de escrita em arquivo
-    fclose(file);
-    printf("\n------------------------------------\n");
-    printf(" 1. Escrever novo arquivo\n 2. Voltar ao menu");
-    printf(" Digite a opção desejada: ");
-    int opcao;
-    scanf("%d", &opcao);
-    switch (opcao){
-        case 1:
-            escreverArquivo();
-            break;
-        case 2:
-            obtemAcao();
-            break;
+    cout << "___Escrever arquivo___\n";
+    cout << "Digite nome do arquivo (ex. file1): ";
+    cin >> filename;
+    filename += ".txt";
+    while (filename.size()>96){
+        cout << "Nome muito grande! Por favor digite outro(96 max): ";
+        cin >> filename;
     }
+    cout << "Abrindo o arquivo: " << filename;
+
+    file.open(filename);
+
+    cout << "\n\nDigite seu texto, para finalizar CTRL+D duas vezes.\n";
+    cout << "------------------------------------\n";
+    while(cin >> input){
+        file << input << '\n';
+    }
+    //TODO :: Função para inserir no disco.
+    file.close();
+    cout << "\n------------------------------------escrito...\n";
+    cout << "ENTER para sair.";
+    cin.clear();
+    cin.get();
 }
 
 void lerArquivo(){
-
+  string infile, line;
+    fstream file;
+    system("clear");
+    cout << "___Ler arquivo___\n";
+    cout << "Digite o nome do arquivo (ex. file1): ";
+    cin >> infile;
+    infile += ".txt";
+    file.open(infile);
+    if (file.is_open()) {
+        cout << "\n----------------------------" << infile << endl;
+        while (getline(file, line)) {
+            cout << line << endl;
+        }
+        cout << "----------------------------\n";
+        file.close();
+        cin.get();
+    }
+    else cout << "Não foi possível abrir o arquivo...\n";
+    cout << "\nENTER para sair.";
+    cin.get();
 }
 
 void apagarArquivo(){
@@ -51,59 +69,53 @@ void mostrarTabelaFAT(){
 
 }
 
-int exibirMenu()
+void exibirMenu()
 {
-    int opcao;
-
     system("clear");
 
-    printf("MENU\n\n");
-    printf(" 1. Escrever Arquivo\n");
-    printf(" 2. Ler Arquivo\n");
-    printf(" 3. Apagar Arquivo\n");
-    printf(" 4. Mostrar Tabela FAT\n");
-    printf(" 5. Sair\n\n");
-    printf(" Digite a opcao desejada: ");
-    scanf("%d", &opcao);
+    cout << "MENU\n\n";
+    cout << " 1. Escrever Arquivo\n";
+    cout << " 2. Ler Arquivo\n";
+    cout << " 3. Apagar Arquivo\n";
+    cout << " 4. Mostrar Tabela FAT\n";
+    cout << " 5. Sair\n\n";
+    cout << " Digite a opcao desejada: ";
+}
 
+int obtemAcao(){
+    int opcao;
+
+    exibirMenu();
+    cin >> opcao;
+    switch(opcao){
+        case 1:
+            escreverArquivo();
+            break;
+        case 2:
+            lerArquivo();
+            break;
+        case 3:
+            apagarArquivo();
+            break;
+        case 4:
+            mostrarTabelaFAT();
+            break;
+        case 5:
+            cout << "\n Fim.\n";
+            return 0;
+        default:
+            cout << "\n Opcao invalida!\n";
+            usleep(1000000);
+            return 1;
+    }
     return opcao;
 }
 
-void obtemAcao(){
-    int opcao;
-
-    do {
-
-        opcao = exibirMenu();
-
-        switch(opcao){
-
-	        case 1:
-	            escreverArquivo();
-	            break;
-	        case 2:
-	            lerArquivo();
-	            break;
-	        case 3:
-	            apagarArquivo();
-	            break;
-	        case 4:
-	            mostrarTabelaFAT();
-	            break;
-	        case 5:
-	            printf("\n Fim.\n");
-	            break;
-	        default:
-	            printf("\n Opcao invalida!");
-	            usleep(1000000);
-        }
-    } while (opcao != 5);
-
-}
-
-
 int main(){
-    obtemAcao();
+    int fim;
+    do {
+        fim = obtemAcao();
+    }while(fim);
     return 0;
 }
 
