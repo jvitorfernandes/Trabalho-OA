@@ -86,7 +86,8 @@ void mostrarTabelaFAT(){
     fat_ex[2] = {"file3", 3 ,9};
     cout << "NOME:\tTAMANHO EM DISCO:\t LOCALIZAÇÃO" << endl;
     for (auto const& file: fat_ex) {
-        cout << file.name<< "\t\t" << file.size << "\t\t" << file.pos << endl;
+        cout << file.name<< "\t\t" << file.size
+            << "\t\t" << file.pos << endl;
     }
     cout << "ENTER para sair.";
     cin.clear();
