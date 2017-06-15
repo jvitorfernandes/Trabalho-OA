@@ -14,21 +14,25 @@
 #define MAX_SECTORS (TRACKS_PER_CILINDER * TRACKS_PER_SURFACE * SECTORS_PER_TRACK)
 #define MAX_FILES 10
 
+#include <string>
+
+using namespace std;
+
 typedef struct FatFileEntry {
-	char file_name[100];
-	int first_sector;
+    string file_name;
+    int first_sector;
 } FatFileEntry;
 
 typedef struct FatSectorEntry {
-	int used;
-	int eof;
-	int next;
+    int used;
+    int eof;
+    int next;
 } FatSectorEntry;
 
 typedef struct FatTable {
-	FatFileEntry entries[MAX_FILES];
-	FatSectorEntry sectors[MAX_SECTORS];
-	int number_files;
+    FatFileEntry entries[MAX_FILES];
+    FatSectorEntry sectors[MAX_SECTORS];
+    int number_files;
 } FatTable;
 
 /**
@@ -40,11 +44,11 @@ int fat_physical_to_sector(int cylinder, int track, int sector);
  * This function searches for the file with the given name in the FAT table,
  * returning the corresponding entry if the file is found or NULL otherwise.
  */
-FatFileEntry * fat_search_file(FatTable * table, const char * name);
+FatFileEntry * fat_search_file(FatTable * table, const string name);
 
 /**
  * This function adds the contents in the buffer to the FatTable.
  */
-FatFileEntry * fat_add_file(FatTable * table, const char * name, const char * buffer, int length);
+FatFileEntry * fat_add_file(FatTable * table, const string name, const string buffer, int length);
 
 #endif // LIBDRIVE_H

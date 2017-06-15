@@ -1,7 +1,6 @@
 
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
-
 #include "disk.h"
 
 TEST_CASE("FromPhysical, SimpleConversion") {

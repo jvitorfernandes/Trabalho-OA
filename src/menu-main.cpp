@@ -5,7 +5,7 @@
 #include <istream>
 #include <fstream>
 #include <vector>
-
+#include "libfat.h"
 
 using namespace std;
 
@@ -15,7 +15,7 @@ void escreverArquivo(){
     string input, filename, aux;
     ofstream file;
     system("clear");
-    cout << "___Escrever arquivo___\n";
+    cout << "___Escrever Arquivo___\n";
     cout << "Digite nome do arquivo (ex. file1): ";
     cin >> filename;
     filename += ".txt";
@@ -47,7 +47,7 @@ void lerArquivo(){
     string infile, line;
     fstream file;
     system("clear");
-    cout << "___Ler arquivo___\n";
+    cout << "___Ler Arquivo___\n";
     cout << "Digite o nome do arquivo (ex. file1): ";
     cin >> infile;
     infile += ".txt";
@@ -67,10 +67,16 @@ void lerArquivo(){
 }
 
 void apagarArquivo(){
-
+    string filename;
+    system("clear");
+    cout << "___Apagar Aquivo___\n";
+    cout << "Digite o nome do arquivo a ser apagado:";
+    cin >> filename;
+    //fat_search_file(table, filename);
 }
 
 void mostrarTabelaFAT(){
+    //output test model
     struct filetype {
         string name;
         int size;
@@ -84,7 +90,8 @@ void mostrarTabelaFAT(){
     fat_ex[0] = {"file1", 1 ,5};
     fat_ex[1] = {"file2", 7 ,2};
     fat_ex[2] = {"file3", 3 ,9};
-    cout << "NOME:\tTAMANHO EM DISCO:\t LOCALIZAÇÃO" << endl;
+    cout << "___Mostra Tabela FAT___\n";
+    cout << "NOME:\tTAMANHO EM DISCO:\tLOCALIZAÇÃO" << endl;
     for (auto const& file: fat_ex) {
         cout << file.name<< "\t\t" << file.size
             << "\t\t" << file.pos << endl;

@@ -1,7 +1,7 @@
 #include "libfat.h"
 #include <string.h>
 
-FatFileEntry * fat_search_file(FatTable * table, const char * name) {
+FatFileEntry * fat_search_file(FatTable * table, const string name) {
     if(table == NULL)
         return NULL;
     
@@ -9,7 +9,7 @@ FatFileEntry * fat_search_file(FatTable * table, const char * name) {
     for(int i = 0; i < table->number_files; ++i) {
         FatFileEntry *file_entry = &(table->entries[i]);
         
-        if(strcmp(file_entry->file_name, name) == 0)
+        if(file_entry->file_name == name)
             return file_entry;
     }
     
@@ -48,7 +48,7 @@ static int _fat_search_free_cluster(FatTable * table, int start_at = 0) {
     
 }
 
-FatFileEntry * fat_add_file(FatTable * table, const char * name, const char * buffer, int length) {
+FatFileEntry * fat_add_file(FatTable * table, const string name, const string buffer, int length) {
     if(fat_search_file(table, name) != NULL)
         return NULL;
     
