@@ -9,6 +9,8 @@
 
 using namespace std;
 
+FatTable table;
+
 int obtemAcao();
 
 void escreverArquivo(){
@@ -24,19 +26,16 @@ void escreverArquivo(){
         cin >> filename;
     }
     cout << "Abrindo o arquivo: " << filename;
-
-    file.open(filename);
-
     cout << "\n\nDigite seu texto, para finalizar CTRL+D.\n";
     cout << "------------------------------------\n";
     while(cin >> input){
         aux += input;
         aux += ' ';
     }
-    file << aux;
-    file << endl;
-    //TODO :: Função para inserir no disco.
-    file.close();
+    aux += '\n';
+    //TODO :: Verificar funcionamento!!!
+    fat_add_file(&table, filename, aux, aux.size());
+
     cout << "\n------------------------------------escrito...\n";
     cout << "ENTER para sair.";
     cin.clear();
@@ -72,7 +71,7 @@ void apagarArquivo(){
     cout << "___Apagar Aquivo___\n";
     cout << "Digite o nome do arquivo a ser apagado:";
     cin >> filename;
-    //fat_search_file(table, filename);
+    fat_search_file(&table, filename);
 }
 
 void mostrarTabelaFAT(){
