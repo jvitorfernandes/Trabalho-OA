@@ -18,6 +18,11 @@
 
 using namespace std;
 
+struct block { unsigned char bytes_s[T_SETOR]; };
+struct sector_array { block sector[SETORES_PT]; };
+struct track_array { sector_array track[TRILHAS_PC]; };
+typedef struct cylinder {track_array trackarray[CILINDROS];} drive;
+
 typedef struct FatFileEntry {
     string file_name;
     int first_sector;

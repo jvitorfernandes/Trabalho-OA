@@ -2,7 +2,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <iostream>
-#include <istream>
 #include <fstream>
 #include <vector>
 #include "libfat.h"
@@ -11,11 +10,9 @@ using namespace std;
 
 FatTable table;
 
-int obtemAcao();
 
 void escreverArquivo(){
     string input, filename, aux;
-    ofstream file;
     system("clear");
     cout << "___Escrever Arquivo___\n";
     cout << "Digite nome do arquivo (ex. file1): ";
@@ -28,13 +25,13 @@ void escreverArquivo(){
     cout << "Abrindo o arquivo: " << filename;
     cout << "\n\nDigite seu texto, para finalizar CTRL+D.\n";
     cout << "------------------------------------\n";
-    while(cin >> input){
-        aux += input;
-        aux += ' ';
+    //captura lixo do buffer
+    cin.get();
+    while(getline(cin, aux)){
+        input += aux + '\n';
     }
-    aux += '\n';
     //TODO :: Verificar funcionamento!!!
-    fat_add_file(&table, filename, aux, aux.size());
+    fat_add_file(&table, filename, input, input.size());
 
     cout << "\n------------------------------------escrito...\n";
     cout << "ENTER para sair.";
