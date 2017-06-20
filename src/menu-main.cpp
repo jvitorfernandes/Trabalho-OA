@@ -8,8 +8,7 @@
 
 using namespace std;
 
-Disk * disk;
-FatTable * table;
+std::shared_ptr<FatTable> table;
 
 
 void escreverArquivo(){
@@ -142,11 +141,9 @@ int obtemAcao(){
 }
 
 int main(){
-    Disk myDisk;
-    FatTable myTable(myDisk);
+    auto myDisk = std::make_shared<Disk>();
 
-    disk = &myDisk;
-    table = &myTable;
+    table = std::make_shared<FatTable>(myDisk);
 
     int fim;
     do {

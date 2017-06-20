@@ -20,6 +20,25 @@ std::shared_ptr<FatFileEntry> FatTable::searchFile(std::string name) {
 bool FatTable::addFile(std::string name, const char *buffer, int size) {
     if(searchFile(name))
         return false;
+
+    int clusterByteSize = SIZE_CLUSTER * clusterSize;
+    int clusters = size / clusterByteSize;
+
+    if(size % clusterByteSize)
+        clusters += 1;
+
+    for(int i = 0; i < clusters; ++i) {
+        int freeCluster = searchFreeCluster();
+        if(freeCluster == -1)
+            return false;
+
+        const char * data = buffer + i * clusterByteSize;
+
+        for(int j = 0; j < clusterSize; ++j)
+            sectors[j].used = 1;
+    }
+
+    return true;
 }
 
 int FatTable::searchFreeCluster(int startAt) {
