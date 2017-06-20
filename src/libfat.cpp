@@ -1,9 +1,10 @@
 #include "libfat.hpp"
 #include <string.h>
 
-FatTable::FatTable(Disk &disk, int clusterSize) :
-    disk(&disk),
-    clusterSize(clusterSize)
+FatTable::FatTable(std::shared_ptr<Disk> disk, int clusterSize) :
+    disk(disk),
+    clusterSize(clusterSize),
+    sectors(disk->sectorsTotal)
 {
 
 }
@@ -26,7 +27,7 @@ int FatTable::searchFreeCluster(int startAt) {
     int count = 0;
 
     // Looking for clusterSize contiguous unused sectors
-    for(int i = 0; i < sectors.size(); ++i) {
+    for(int i = startAt; i < sectors.size(); ++i) {
         FatSectorEntry& sectorEntry = sectors[i];
         if(count == 0)
             first = i;

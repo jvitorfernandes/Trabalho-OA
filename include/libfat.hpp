@@ -10,20 +10,26 @@
 
 using namespace std;
 
-typedef struct FatFileEntry {
+class FatFileEntry {
+public:
+    FatFileEntry() : firstSector(0) {};
+
     string fileName;
     int firstSector;
-} FatFileEntry;
+};
 
-typedef struct FatSectorEntry {
+class FatSectorEntry {
+public:
+    FatSectorEntry() : used(0), eof(0), next(0) {};
+
     int used;
     int eof;
     int next;
-} FatSectorEntry;
+};
 
 class FatTable {
 public:
-    FatTable(Disk& disk, int clusterSize = SIZE_CLUSTER);
+    FatTable(std::shared_ptr<Disk> disk, int clusterSize = SIZE_CLUSTER);
 
     std::shared_ptr<FatFileEntry> searchFile(std::string name);
 
