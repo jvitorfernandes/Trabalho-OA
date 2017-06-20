@@ -1,56 +1,44 @@
-#include "libfat.h"
+#include "libfat.hpp"
 #include <string.h>
 
-FatFileEntry * fat_search_file(FatTable * table, const string name) {
-    if(table == NULL)
-        return NULL;
-    
-    // Loop sequentially through all files in the FAT table, looking for a matching name
-    for(int i = 0; i < table->number_files; ++i) {
-        FatFileEntry *file_entry = &(table->entries[i]);
-        
-        if(file_entry->file_name == name)
-            return file_entry;
-    }
-    
-    return NULL;
+FatTable::FatTable(Disk &disk, int clusterSize) :
+    disk(&disk),
+    clusterSize(clusterSize)
+{
+
 }
 
-int fat_physical_to_sector(int cylinder, int track, int sector) {
-    return
-        cylinder * SECTORS_PER_TRACK * TRACKS_PER_SURFACE +
-        track * TRACKS_PER_SURFACE +
-        sector;
+std::shared_ptr<FatFileEntry> FatTable::searchFile(std::string name) {
+    for(auto& fileEntry : files)
+        if(fileEntry.fileName == name)
+            return std::shared_ptr<FatFileEntry>(&fileEntry);
+
+    return nullptr;
 }
 
-static int _fat_search_free_cluster(FatTable * table, int start_at = 0) {
-    if(table == NULL)
-        return -1;
-    
+bool FatTable::addFile(std::string name, const char *buffer, int size) {
+    if(searchFile(name))
+        return false;
+}
+
+int FatTable::searchFreeCluster(int startAt) {
     int first;
     int count = 0;
-    
-    // Looking for SIZE_CLUSTER contiguous unused sectors
-    for(int i = start_at; i < MAX_SECTORS; ++i) {
-        FatSectorEntry * entry = &(table->sectors[i]);
-        
+
+    // Looking for clusterSize contiguous unused sectors
+    for(int i = 0; i < sectors.size(); ++i) {
+        FatSectorEntry& sectorEntry = sectors[i];
         if(count == 0)
             first = i;
-        
-        if(!entry->used)
+
+        if(!sectorEntry.used)
             ++count;
         else
             count = 0;
-        
-        if(count == SIZE_CLUSTER)
+
+        if(count == clusterSize)
             return first;
     }
-    
-}
 
-FatFileEntry * fat_add_file(FatTable * table, const string name, const string buffer, int length) {
-    if(fat_search_file(table, name) != NULL)
-        return NULL;
-    
-    
+    return -1;
 }

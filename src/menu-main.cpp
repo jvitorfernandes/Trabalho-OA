@@ -4,11 +4,12 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include "libfat.h"
+#include "libfat.hpp"
 
 using namespace std;
 
-FatTable table;
+Disk * disk;
+FatTable * table;
 
 
 void escreverArquivo(){
@@ -28,10 +29,10 @@ void escreverArquivo(){
     //captura lixo do buffer
     cin.get();
     while(getline(cin, aux)){
-        input += aux + '\n';
+        input += aux + "\n";
     }
     //TODO :: Verificar funcionamento!!!
-    fat_add_file(&table, filename, input, input.size());
+    table->addFile(filename, input.c_str(), input.size());
 
     cout << "\n------------------------------------escrito...\n";
     cout << "ENTER para sair.";
@@ -68,7 +69,7 @@ void apagarArquivo(){
     cout << "___Apagar Aquivo___\n";
     cout << "Digite o nome do arquivo a ser apagado:";
     cin >> filename;
-    fat_search_file(&table, filename);
+    table->searchFile(filename);
 }
 
 void mostrarTabelaFAT(){
@@ -141,6 +142,12 @@ int obtemAcao(){
 }
 
 int main(){
+    Disk myDisk;
+    FatTable myTable(myDisk);
+
+    disk = &myDisk;
+    table = &myTable;
+
     int fim;
     do {
         fim = obtemAcao();

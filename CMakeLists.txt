@@ -15,7 +15,7 @@ project(disk-drive)
 set(CMAKE_CXX_STANDARD 14)
 
 # Library target
-set(LIBRARY_SOURCE_FILES src/disk.cpp src/libfat.cpp)
+set(LIBRARY_SOURCE_FILES src/libfat.cpp src/disk.cpp)
 add_library(disk ${LIBRARY_SOURCE_FILES})
 
 # Include directory
