@@ -26,7 +26,7 @@ add_executable(disk-main ${LIBRARY_SOURCE_FILES} src/menu-main.cpp)
 
 # Add the tests
 enable_testing()
-foreach(test_name disk fat-simple)
+foreach(test_name disk libfat)
     add_executable(runTest-${test_name} test/test-${test_name}.cpp)
     target_link_libraries(runTest-${test_name} disk)
     add_test(${test_name} runTest-${test_name})
