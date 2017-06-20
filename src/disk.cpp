@@ -13,14 +13,14 @@ Disk::Disk(int tracksPerSurface, int tracksPerCylinder, int sectorsPerTrack) :
 
 }
 
-int Disk::from_physical(int cylinder, int track, int sector) {
+int Disk::fromPhysical(int cylinder, int track, int sector) {
     return
         cylinder * sectorsPerTrack * tracksPerCylinder +
         track * sectorsPerTrack +
         sector;
 }
 
-void Disk::to_physical(int sectorIndex, int &cylinder, int &track, int &sector) {
+void Disk::toPhysical(int sectorIndex, int &cylinder, int &track, int &sector) {
     cylinder = sectorIndex / (sectorsPerTrack * tracksPerCylinder);
     sectorIndex = sectorIndex % (sectorsPerTrack * tracksPerCylinder);
 
@@ -28,11 +28,11 @@ void Disk::to_physical(int sectorIndex, int &cylinder, int &track, int &sector) 
     sector = sectorIndex % sectorsPerTrack;
 }
 
-void Disk::set_sector(int sectorIndex, int value) {
+void Disk::setSector(int sectorIndex, int value) {
     sectors[sectorIndex] = value;
 }
 
-void Disk::set_sector(int cylinder, int track, int sector, int value) {
-    int sectorIndex = from_physical(cylinder, track, sector);
-    set_sector(sectorIndex, value);
+void Disk::setSector(int cylinder, int track, int sector, int value) {
+    int sectorIndex = fromPhysical(cylinder, track, sector);
+    setSector(sectorIndex, value);
 }

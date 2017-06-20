@@ -16,16 +16,16 @@ public:
             int tracksPerCylinder = TRACKS_PER_CILINDER,
             int sectorsPerTrack = SECTORS_PER_TRACK);
 
-    int from_physical(int cylinder, int track, int sector);
+    int fromPhysical(int cylinder, int track, int sector);
     /* Gives the sector index given the physical coordinates. */
 
-    void to_physical(int sectorIndex, int &cylinder, int &track, int &sector);
+    void toPhysical(int sectorIndex, int &cylinder, int &track, int &sector);
     /* Returns the physical coordinates given the sector number. */
 
-    void set_sector(int sectorIndex, int value);
+    void setSector(int sectorIndex, int value);
     /* Sets the value of the given sector */
 
-    void set_sector(int cylinder, int track, int sector, int value);
+    void setSector(int cylinder, int track, int sector, int value);
     /* Sets the value of the sector with the given physical coordinates. */
 
 
