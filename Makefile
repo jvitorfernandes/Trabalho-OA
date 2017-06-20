@@ -8,24 +8,18 @@ INCLUDE = include
 TEST = test
 
 MAIN_TARGET = menu-main
-LIB_NAME = drive
-
-SRC_FILES = libdrive disk
-HEADERS_FILES = libdrive.h disk.h
-TEST_FILES = test-drive-simple test-disk
-
-# Flags to compile the tests
-# If gtest is installed in a different location, add the linking
-# and include directories here
-TEST_FLAGS = -lgtest -lpthread
+SRC_FILES = libfat disk menu-main
+SRC_LIB_FILES = libfat disk
+HEADERS_FILES = libfat.h
+TEST_FILES = test-fat-simple test-disk
 
 # Generate the full path for the cpp files (usually src/srcName.cpp)
 _SRC_PATHS = $(addprefix $(SRC)/, $(SRC_FILES))
 SRC_PATHS = $(addsuffix .cpp, $(_SRC_PATHS))
 
-# Generate the full path for the library and the main target
-MAIN_TARGET_PATH = $(BIN)/$(MAIN_TARGET)
-LIB_TARGET_PATH = $(LIB)/lib$(LIB_NAME).a
+# Generate the full path for the cpp files (usually src/srcName.cpp)
+_SRC_LIB_PATHS = $(addprefix $(SRC)/, $(SRC_LIB_FILES))
+SRC_LIB_PATHS = $(addsuffix .cpp, $(_SRC_LIB_PATHS))
 
 # Generate the full path for the .h files (usually include/headerName)
 HEADERS_PATHS = $(addprefix $(INCLUDE)/, $(HEADERS_FILES))
@@ -39,37 +33,27 @@ TEST_BIN_PATHS = $(addprefix $(TEST)/$(BIN)/, $(TEST_FILES))
 
 # Add the headers directory to the compilation flags
 INCLUDE_FLAGS = -I$(INCLUDE)
-LIB_FLAGS = -L$(LIB) -l$(LIB_NAME)
 
-all: $(MAIN_TARGET_PATH) build-tests
+run-main: $(BIN)/$(MAIN_TARGET)
+	./$(BIN)/$(MAIN_TARGET)
 
-run-main: $(MAIN_TARGET_PATH)
-	./$<
-
-# Main program binary
-$(MAIN_TARGET_PATH): $(SRC)/$(MAIN_TARGET).cpp $(LIB_TARGET_PATH)
+$(BIN)/$(MAIN_TARGET): $(OBJ_PATHS)
 	mkdir -p $(BIN)
-	$(CC) -o $@ $< $(INCLUDE_FLAGS) $(LIB_FLAGS)
+	$(CC) -o $(BIN)/$(MAIN_TARGET) $(OBJ_PATHS)
 
-# Main static library containing the disk functionality
-$(LIB_TARGET_PATH): $(OBJ_PATHS)
-	mkdir -p $(LIB)
-	ar rcs $@ $^
-
-# Compiling the object files
 $(OBJ)/%.o: $(SRC)/%.cpp $(HEADERS_PATHS)
 	mkdir -p $(OBJ)
 	$(CC) -c -o $@ $< $(INCLUDE_FLAGS)
 
 run-tests: build-tests
-	$(foreach var,$(TEST_BIN_PATHS),./$(var) && ) :
+	@$(foreach var,$(TEST_BIN_PATHS), echo "RUNNING " $(var); ./$(var); ) :
 
 build-tests: $(TEST_BIN_PATHS)
 
 # Build the tests (all the binaries in TEST_BIN_PATHS)
-$(TEST)/$(BIN)/%: $(TEST)/%.cpp $(HEADERS_PATHS) $(SRC_PATHS) $(LIB_TARGET_PATH)
+$(TEST)/$(BIN)/%: $(TEST)/%.cpp $(HEADERS_PATHS) $(SRC_PATHS) $(OBJ_PATHS)
 	mkdir -p $(TEST)/$(BIN)
-	$(CC) -o $@ $< $(INCLUDE_FLAGS) $(LIB_FLAGS) $(TEST_FLAGS)
+	$(CC) -o $@ $< $(SRC_LIB_PATHS) $(INCLUDE_FLAGS) $(TEST_FLAGS)
 
 .PHONY: clean
 
