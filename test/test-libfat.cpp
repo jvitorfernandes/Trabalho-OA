@@ -141,8 +141,12 @@ TEST_CASE("ReadExistingFile, NonEmptyFatTable") {
     FatTable table(disk);
     std::string teststr = "test string";
     table.addFile("file1.txt", teststr.c_str(), teststr.size());
+    table.addFile("file2.txt", teststr.c_str(), teststr.size());
 
     std::vector<char> result = table.readFile("file1.txt");
+    std::vector<char> result2 = table.readFile("file2.txt");
+    std::string output(result2.begin(),result2.end());
 
     REQUIRE(result.size() == teststr.size());
+    REQUIRE(output == teststr);
 }
