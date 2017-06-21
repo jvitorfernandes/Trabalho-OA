@@ -12,11 +12,12 @@ using namespace std;
 
 class FatFileEntry {
 public:
-    FatFileEntry() : firstSector(0), size(0) {};
+    FatFileEntry(int valid = 1) : firstSector(0), size(0), valid(valid) {};
 
     string fileName;
     int firstSector;
     int size;
+    int valid;
 };
 
 class FatSectorEntry {
@@ -34,7 +35,7 @@ class FatTable {
 public:
     FatTable(std::shared_ptr<Disk> disk, int clusterSize = SIZE_CLUSTER);
 
-    std::shared_ptr<FatFileEntry> searchFile(std::string name);
+    FatFileEntry searchFile(std::string name);
 
     bool addFile(std::string name, const char *buffer, int size);
 
@@ -50,7 +51,7 @@ public:
     std::vector<int> findFreeClusters(int nClusters);
 
     /* Reads the file */
-    bool readFile(std::string name, std::vector<char> &buffer);
+    std::vector<char> readFile(std::string name);
 
     std::shared_ptr<Disk> disk;
     int clusterSize;

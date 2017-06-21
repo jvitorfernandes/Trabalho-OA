@@ -12,16 +12,17 @@ FatTable::FatTable(std::shared_ptr<Disk> disk, int clusterSize) :
 
 }
 
-std::shared_ptr<FatFileEntry> FatTable::searchFile(std::string name) {
-    for(auto& fileEntry : files)
+FatFileEntry FatTable::searchFile(std::string name) {
+    for(auto fileEntry : files)
         if(fileEntry.fileName == name)
-            return std::shared_ptr<FatFileEntry>(&fileEntry);
+            return fileEntry;
 
-    return nullptr;
+    FatFileEntry entry(0);
+    return entry;
 }
 
 bool FatTable::addFile(std::string name, const char *buffer, int size) {
-    if(searchFile(name))
+    if(searchFile(name).valid)
         return false;
 
     /* Get the number of whole clusters that will be used by the file */
@@ -82,6 +83,7 @@ bool FatTable::addFile(std::string name, const char *buffer, int size) {
     entry.fileName = name;
     entry.firstSector = clusters[0];
     entry.size = size;
+    entry.valid = 1;
     files.push_back(entry);
 
     return true;
@@ -174,15 +176,15 @@ std::vector<int> FatTable::findFreeClusters(int nClusters) {
     }
 }
 
-bool FatTable::readFile(std::string name, std::vector<char> &buffer) {
-    buffer.clear();
+std::vector<char> FatTable::readFile(std::string name) {
 
-    auto entry = searchFile(name);
-    if(entry == nullptr)
-        return false;
+    std::vector<char> buffer;
 
-    buffer.clear();
-    int firstSector = entry->firstSector;
+    auto fileEntry = searchFile(name);
+    if(!fileEntry.valid)
+        return buffer;
+
+    int firstSector = fileEntry.firstSector;
 
     FatSectorEntry sectorEntry(0, 0, firstSector);
     int sector;
@@ -192,18 +194,20 @@ bool FatTable::readFile(std::string name, std::vector<char> &buffer) {
         sector = sectorEntry.next;
         sectorEntry = sectors[sector];
 
-        const Sector &diskSector = disk->sectors[sector];
+        Sector diskSector = disk->sectors[sector];
         for(int i = 0; i < SIZE_SECTOR_IN_BYTES; ++i)
             buffer.push_back(diskSector.data[i]);
 
         ++n_iter;
     } while(sectorEntry.eof != 1 && n_iter < 1000000);
 
+    /* Protection against infinite loops */
     if(n_iter >= 1000000) {
         buffer.clear();
         std::cout << "INFINITE LOOPS" << std::endl;
-        return false;
+        return buffer;
     }
-    buffer.resize(entry->size);
-    return true;
+
+    buffer.resize(fileEntry.size);
+    return buffer;
 }

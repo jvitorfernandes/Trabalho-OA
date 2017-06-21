@@ -8,7 +8,7 @@ TEST_CASE("SearchFile, EmptyFatTable") {
     auto disk = std::make_shared<Disk>();
     FatTable table(disk);
 
-    REQUIRE(table.searchFile("teste") == nullptr);
+    REQUIRE(table.searchFile("teste").valid == 0);
 }
 
 
@@ -109,10 +109,10 @@ TEST_CASE("UsedSector, EmptyFatTable") {
     auto disk = std::make_shared<Disk>();
     FatTable table(disk);
     string teststr = "test string";
-    table.addFile("file1.txt", teststr.c_str(), (int)teststr.size());
+    bool result = table.addFile("file1.txt", teststr.c_str(), (int)teststr.size());
 
+    REQUIRE(result == true);
     REQUIRE(table.sectors[0].used == 1);
-    auto secs = disk->sectors;
     std::cout << std::endl;
 }
 
@@ -120,19 +120,29 @@ TEST_CASE("UsedSector, EmptyFatTable") {
 TEST_CASE("ReadNonExistingFile, EmptyFatTable") {
     auto disk = std::make_shared<Disk>();
     FatTable table(disk);
-    std::vector<char> buffer;
+    auto buffer = table.readFile("sldfk");
 
-    REQUIRE(table.readFile("sldfk", buffer) == false);
+    REQUIRE(buffer.size() == 0);
 }
 
-TEST_CASE("ReadFile, EmptyFatTable") {
+TEST_CASE("ReadNonExistingFile, NonEmptyFatTable") {
     auto disk = std::make_shared<Disk>();
     FatTable table(disk);
-    string teststr = "test string";
-    table.addFile("file1.txt", teststr.c_str(), (int)teststr.size());
+    std::string teststr = "test string";
+    table.addFile("file1.txt", teststr.c_str(), teststr.size());
 
-    std::vector<char> bufferRead;
-    bool result = table.readFile("file1.txt", bufferRead);
-    //REQUIRE(result == true);
-    std::cout << "UE" << std::endl;
+    std::vector<char> result = table.readFile("sdfasd");
+
+    REQUIRE(result.size() == 0);
+}
+
+TEST_CASE("ReadExistingFile, NonEmptyFatTable") {
+    auto disk = std::make_shared<Disk>();
+    FatTable table(disk);
+    std::string teststr = "test string";
+    table.addFile("file1.txt", teststr.c_str(), teststr.size());
+
+    std::vector<char> result = table.readFile("file1.txt");
+
+    REQUIRE(result.size() == teststr.size());
 }
