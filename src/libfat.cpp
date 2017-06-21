@@ -211,3 +211,29 @@ std::vector<char> FatTable::readFile(std::string name) {
     buffer.resize(fileEntry.size);
     return buffer;
 }
+
+vector<filedescription> FatTable::getFatTable() {
+    vector<filedescription> fatDescTable;
+
+    for(int i=0; i < files.size(); i++) {
+        fatDescTable.push_back(filedescription());
+
+        fatDescTable[i].name = files[i].fileName;
+
+        auto fileEntry = searchFile(fatDescTable[i].name);
+
+        fatDescTable[i].size = fileEntry.size;
+        int firstSector = fileEntry.firstSector;
+        FatSectorEntry sectorEntry(0, 0, firstSector);
+        int sector, n_iter = 0;
+
+        do {
+            sector = sectorEntry.next;
+            sectorEntry = sectors[sector];
+            fatDescTable[i].sectors.push_back(sector);
+
+            ++n_iter;
+        } while(sectorEntry.eof != 1 && n_iter < 1000000);
+    }
+    return fatDescTable;
+}
