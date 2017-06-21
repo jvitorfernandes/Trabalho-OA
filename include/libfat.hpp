@@ -31,6 +31,12 @@ public:
     int next;
 };
 
+struct filedescription {
+    string name;
+    int size;
+    vector<int> sectors;
+};
+
 class FatTable {
 public:
     FatTable(std::shared_ptr<Disk> disk, int clusterSize = SIZE_CLUSTER);
@@ -52,6 +58,12 @@ public:
 
     /* Reads the file */
     std::vector<char> readFile(std::string name);
+
+    /* Get the FatTable */
+    vector<filedescription> getFatTable();
+
+    /* Erase file from Disk */
+    bool eraseFromDisk(std::string name);
 
     std::shared_ptr<Disk> disk;
     int clusterSize;

@@ -150,3 +150,23 @@ TEST_CASE("ReadExistingFile, NonEmptyFatTable") {
     REQUIRE(result.size() == teststr.size());
     REQUIRE(output == teststr);
 }
+
+TEST_CASE("GetFatTable, NonEmptyFatTable") {
+    auto disk = std::make_shared<Disk>();
+    FatTable table(disk);
+    std::string teststr = "test string";
+    table.addFile("file1.txt", teststr.c_str(), teststr.size());
+    table.addFile("file2.txt", teststr.c_str(), teststr.size());
+
+    vector<filedescription> filesFat = table.getFatTable();
+
+    REQUIRE("file1.txt" == filesFat[0].name);
+    REQUIRE(teststr.size() == filesFat[0].size);
+    //TODO :: teste para setores
+    REQUIRE("file2.txt" == filesFat[1].name);
+    REQUIRE(teststr.size() == filesFat[1].size);
+}
+
+
+
+//TODO :: teste para apagar arquivo

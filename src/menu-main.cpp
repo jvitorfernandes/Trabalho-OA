@@ -2,7 +2,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <iostream>
-#include <fstream>
+#include <sstream>
+#include <iterator>
 #include <vector>
 #include "libfat.hpp"
 
@@ -30,31 +31,27 @@ void escreverArquivo(){
     while(getline(cin, aux)){
         input += aux + "\n";
     }
-    //TODO :: Verificar funcionamento!!!
     table->addFile(filename, input.c_str(), input.size());
 
-    cout << "\n------------------------------------escrito...\n";
-    cout << "ENTER para sair.";
+    cout << "------------------------------------escrito...\n";
+    cout << "\nENTER para sair.";
     cin.clear();
     cin.get();
 }
 
 void lerArquivo(){
-    string infile, line;
-    fstream file;
+    string filename, line;
     system("clear");
     cout << "___Ler Arquivo___\n";
     cout << "Digite o nome do arquivo (ex. file1): ";
-    cin >> infile;
-    infile += ".txt";
-    file.open(infile);
-    if (file.is_open()) {
-        cout << "\n----------------------------" << infile << endl;
-        while (getline(file, line)) {
-            cout << line << endl;
-        }
+    cin >> filename;
+    filename += ".txt";
+    std::vector<char> result = table->readFile(filename);
+    if (result.size() > 0) {
+        std::string output(result.begin(), result.end());
+        cout << "\n----------------------------" << filename << endl;
+        cout << output;
         cout << "----------------------------\n";
-        file.close();
         cin.get();
     }
     else cout << "Não foi possível abrir o arquivo...\n";
@@ -68,31 +65,29 @@ void apagarArquivo(){
     cout << "___Apagar Aquivo___\n";
     cout << "Digite o nome do arquivo a ser apagado:";
     cin >> filename;
-    table->searchFile(filename);
+    filename += ".txt";
+    if(table->eraseFromDisk(filename))
+        cout << "Arquivo apagado..." << endl;
+    else cout << "Arquivo inexistente..." << endl;
+    cin.get();
+    cout << "\nENTER para sair.";
+    cin.get();
 }
 
 void mostrarTabelaFAT(){
-    //output test model
-    struct filetype {
-        string name;
-        int size;
-        int pos;
-    };
-    vector<filetype> fat_ex;
+    vector<filedescription> filesFat = table->getFatTable();
+    std::stringstream result;
+
     system("clear");
-    fat_ex.push_back(filetype());
-    fat_ex.push_back(filetype());
-    fat_ex.push_back(filetype());
-    fat_ex[0] = {"file1", 1 ,5};
-    fat_ex[1] = {"file2", 7 ,2};
-    fat_ex[2] = {"file3", 3 ,9};
     cout << "___Mostra Tabela FAT___\n";
     cout << "NOME:\tTAMANHO EM DISCO:\tLOCALIZAÇÃO" << endl;
-    for (auto const& file: fat_ex) {
+    for (auto file: filesFat) {
+        copy(file.sectors.begin(), file.sectors.end(),
+             ostream_iterator<int>(result, " "));
         cout << file.name<< "\t\t" << file.size
-            << "\t\t" << file.pos << endl;
+            << "\t\t" << result.str() << endl;
     }
-    cout << "ENTER para sair.";
+    cout << "\nENTER para sair.";
     cin.clear();
     cin.get();
     cin.get();
