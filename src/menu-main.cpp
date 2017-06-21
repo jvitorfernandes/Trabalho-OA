@@ -1,8 +1,8 @@
-#include <stdio.h>
-#include <string.h>
 #include <unistd.h>
+#include <cstdlib>
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include <iterator>
 #include <vector>
 #include "libfat.hpp"
@@ -14,6 +14,7 @@ std::shared_ptr<FatTable> table;
 
 void escreverArquivo(){
     string input, filename, aux;
+    ifstream filein;
     system("clear");
     cout << "___Escrever Arquivo___\n";
     cout << "Digite nome do arquivo (ex. file1): ";
@@ -24,16 +25,16 @@ void escreverArquivo(){
         cin >> filename;
     }
     cout << "Abrindo o arquivo: " << filename;
-    cout << "\n\nDigite seu texto, para finalizar CTRL+D.\n";
-    cout << "------------------------------------\n";
+    filein.open(filename);
+
     //captura lixo do buffer
     cin.get();
-    while(getline(cin, aux)){
+    while(getline(filein, aux)){
         input += aux + "\n";
     }
+    filein.close();
     table->addFile(filename, input.c_str(), input.size());
-
-    cout << "------------------------------------escrito...\n";
+    cout << "\n------------------------------------escrito...\n";
     cout << "\nENTER para sair.";
     cin.clear();
     cin.get();
@@ -41,6 +42,7 @@ void escreverArquivo(){
 
 void lerArquivo(){
     string filename, line;
+    ofstream fileout("SAIDA.TXT");
     system("clear");
     cout << "___Ler Arquivo___\n";
     cout << "Digite o nome do arquivo (ex. file1): ";
@@ -51,6 +53,7 @@ void lerArquivo(){
         std::string output(result.begin(), result.end());
         cout << "\n----------------------------" << filename << endl;
         cout << output;
+        fileout << output;
         cout << "----------------------------\n";
         cin.get();
     }
@@ -76,16 +79,17 @@ void apagarArquivo(){
 
 void mostrarTabelaFAT(){
     vector<filedescription> filesFat = table->getFatTable();
-    std::stringstream result;
 
     system("clear");
     cout << "___Mostra Tabela FAT___\n";
     cout << "NOME:\tTAMANHO EM DISCO:\tLOCALIZAÇÃO" << endl;
     for (auto file: filesFat) {
+        std::stringstream result;
         copy(file.sectors.begin(), file.sectors.end(),
              ostream_iterator<int>(result, " "));
-        cout << file.name<< "\t\t" << file.size
+        cout << file.name<< "\t" << file.size
             << "\t\t" << result.str() << endl;
+        result.clear();
     }
     cout << "\nENTER para sair.";
     cin.clear();
