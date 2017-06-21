@@ -33,7 +33,7 @@ void escreverArquivo(){
     }
     table->addFile(filename, input.c_str(), input.size());
 
-    cout << "\n------------------------------------escrito...\n";
+    cout << "------------------------------------escrito...\n";
     cout << "\nENTER para sair.";
     cin.clear();
     cin.get();
@@ -65,6 +65,7 @@ void apagarArquivo(){
     cout << "___Apagar Aquivo___\n";
     cout << "Digite o nome do arquivo a ser apagado:";
     cin >> filename;
+    filename += ".txt";
     if(table->eraseFromDisk(filename))
         cout << "Arquivo apagado..." << endl;
     else cout << "Arquivo inexistente..." << endl;

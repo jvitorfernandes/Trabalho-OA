@@ -261,5 +261,12 @@ bool FatTable::eraseFromDisk(std::string name) {
 
         ++n_iter;
     } while(sectorEntry.eof != 1 && n_iter < 1000000);
+    for(vector<FatFileEntry>::iterator it=files.begin(); it != files.end();) {
+        if(it->fileName == name)
+            it = files.erase(it);
+        else
+            it++;
+    }
+
     return true;
 }
