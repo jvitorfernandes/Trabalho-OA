@@ -62,6 +62,9 @@ public:
     /* Get the FatTable */
     vector<filedescription> getFatTable();
 
+    /* Erase file from Disk */
+    bool eraseFromDisk(std::string name);
+
     std::shared_ptr<Disk> disk;
     int clusterSize;
     std::vector<FatFileEntry> files;

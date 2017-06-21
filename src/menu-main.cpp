@@ -66,7 +66,12 @@ void apagarArquivo(){
     cout << "___Apagar Aquivo___\n";
     cout << "Digite o nome do arquivo a ser apagado:";
     cin >> filename;
-    table->searchFile(filename);
+    if(table->eraseFromDisk(filename))
+        cout << "Arquivo apagado..." << endl;
+    else cout << "Arquivo inexistente..." << endl;
+    cin.get();
+    cout << "\nENTER para sair.";
+    cin.get();
 }
 
 void mostrarTabelaFAT(){
