@@ -35,7 +35,17 @@ public:
 
     bool addFile(std::string name, const char *buffer, int size);
 
-    int searchFreeCluster(int startAt = 0);
+    /* Finds the next free cluster, considering that sectors in 'marked'
+     * are already used. */
+    int findFirstFreeCluster(std::vector<int> marked = {});
+
+    /* Finds all the free clusters in the given cylinder, considering
+     * that sectors in 'marked' are already used. */
+    std::vector<int> findFreeClustersSameCylinder(int firstCluster, std::vector<int> marked = {});
+
+    /* Finds the first free nClusters or an empty vector in case it can't */
+    std::vector<int> findFreeClusters(int nClusters);
+
 
     std::shared_ptr<Disk> disk;
     int clusterSize;
