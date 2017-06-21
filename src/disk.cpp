@@ -3,6 +3,7 @@
 //
 
 #include "disk.hpp"
+#include <cstring>
 
 Disk::Disk(int tracksPerSurface, int tracksPerCylinder, int sectorsPerTrack) :
         tracksPerSurface(tracksPerSurface),
@@ -28,11 +29,7 @@ void Disk::toPhysical(int sectorIndex, int &cylinder, int &track, int &sector) {
     sector = sectorIndex % sectorsPerTrack;
 }
 
-void Disk::setSector(int sectorIndex, int value) {
-    sectors[sectorIndex] = value;
-}
-
-void Disk::setSector(int cylinder, int track, int sector, int value) {
-    int sectorIndex = fromPhysical(cylinder, track, sector);
-    setSector(sectorIndex, value);
+void Disk::setSector(int sectorIndex, const char * buffer) {
+    Sector &sector = sectors[sectorIndex];
+    memcpy(sector.data, buffer, SIZE_SECTOR_IN_BYTES);
 }

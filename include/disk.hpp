@@ -9,6 +9,10 @@
 #include <vector>
 #include "default_params.hpp"
 
+typedef struct Sector {
+    char data[SIZE_SECTOR_IN_BYTES];
+} Sector;
+
 class Disk {
 public:
     Disk(
@@ -22,18 +26,14 @@ public:
     void toPhysical(int sectorIndex, int &cylinder, int &track, int &sector);
     /* Returns the physical coordinates given the sector number. */
 
-    void setSector(int sectorIndex, int value);
+    void setSector(int sectorIndex, const char *buffer);
     /* Sets the value of the given sector */
-
-    void setSector(int cylinder, int track, int sector, int value);
-    /* Sets the value of the sector with the given physical coordinates. */
-
 
     /* Should implement this as getter/setter methods, but ain't no time for that */
     int tracksPerSurface, tracksPerCylinder, sectorsPerTrack;
     int sectorsTotal;
 
-    std::vector<int> sectors;
+    std::vector<Sector> sectors;
 };
 
 #endif // DISK_HPP
