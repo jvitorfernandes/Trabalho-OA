@@ -104,3 +104,35 @@ TEST_CASE("FindFreeClusters, EmptyFatTable") {
     REQUIRE(table.findFreeClusters(4) == clusters4);
     REQUIRE(table.findFreeClusters(7) == clusters7);
 }
+
+TEST_CASE("UsedSector, EmptyFatTable") {
+    auto disk = std::make_shared<Disk>();
+    FatTable table(disk);
+    string teststr = "test string";
+    table.addFile("file1.txt", teststr.c_str(), (int)teststr.size());
+
+    REQUIRE(table.sectors[0].used == 1);
+    auto secs = disk->sectors;
+    std::cout << std::endl;
+}
+
+
+TEST_CASE("ReadNonExistingFile, EmptyFatTable") {
+    auto disk = std::make_shared<Disk>();
+    FatTable table(disk);
+    std::vector<char> buffer;
+
+    REQUIRE(table.readFile("sldfk", buffer) == false);
+}
+
+TEST_CASE("ReadFile, EmptyFatTable") {
+    auto disk = std::make_shared<Disk>();
+    FatTable table(disk);
+    string teststr = "test string";
+    table.addFile("file1.txt", teststr.c_str(), (int)teststr.size());
+
+    std::vector<char> bufferRead;
+    bool result = table.readFile("file1.txt", bufferRead);
+    //REQUIRE(result == true);
+    std::cout << "UE" << std::endl;
+}

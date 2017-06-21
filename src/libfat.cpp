@@ -78,6 +78,12 @@ bool FatTable::addFile(std::string name, const char *buffer, int size) {
         lastBytes[i] = buffer[bytesWritten + i];
     disk->setSector(lastSector, &(lastBytes[0]));
 
+    FatFileEntry entry;
+    entry.fileName = name;
+    entry.firstSector = clusters[0];
+    entry.size = size;
+    files.push_back(entry);
+
     return true;
 }
 
@@ -166,4 +172,38 @@ std::vector<int> FatTable::findFreeClusters(int nClusters) {
         }
         nClusters -= clustersCylinder.size();
     }
+}
+
+bool FatTable::readFile(std::string name, std::vector<char> &buffer) {
+    buffer.clear();
+
+    auto entry = searchFile(name);
+    if(entry == nullptr)
+        return false;
+
+    buffer.clear();
+    int firstSector = entry->firstSector;
+
+    FatSectorEntry sectorEntry(0, 0, firstSector);
+    int sector;
+    int n_iter = 0;
+
+    do {
+        sector = sectorEntry.next;
+        sectorEntry = sectors[sector];
+
+        const Sector &diskSector = disk->sectors[sector];
+        for(int i = 0; i < SIZE_SECTOR_IN_BYTES; ++i)
+            buffer.push_back(diskSector.data[i]);
+
+        ++n_iter;
+    } while(sectorEntry.eof != 1 && n_iter < 1000000);
+
+    if(n_iter >= 1000000) {
+        buffer.clear();
+        std::cout << "INFINITE LOOPS" << std::endl;
+        return false;
+    }
+    buffer.resize(entry->size);
+    return true;
 }

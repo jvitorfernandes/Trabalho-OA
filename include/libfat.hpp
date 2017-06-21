@@ -12,16 +12,19 @@ using namespace std;
 
 class FatFileEntry {
 public:
-    FatFileEntry() : firstSector(0) {};
+    FatFileEntry() : firstSector(0), size(0) {};
 
     string fileName;
     int firstSector;
+    int size;
 };
 
 class FatSectorEntry {
 public:
-    FatSectorEntry() : used(0), eof(0), next(0) {};
+    FatSectorEntry(int used = 0, int eof = 0, int next = 0) :
+        used(used), eof(eof), next(next) {
 
+    }
     int used;
     int eof;
     int next;
@@ -46,6 +49,8 @@ public:
     /* Finds the first free nClusters or an empty vector in case it can't */
     std::vector<int> findFreeClusters(int nClusters);
 
+    /* Reads the file */
+    bool readFile(std::string name, std::vector<char> &buffer);
 
     std::shared_ptr<Disk> disk;
     int clusterSize;
