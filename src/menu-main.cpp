@@ -31,7 +31,6 @@ void escreverArquivo(){
     while(getline(cin, aux)){
         input += aux + "\n";
     }
-    //TODO :: Verificar funcionamento!!!
     table->addFile(filename, input.c_str(), input.size());
 
     cout << "\n------------------------------------escrito...\n";

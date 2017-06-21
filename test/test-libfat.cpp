@@ -166,3 +166,7 @@ TEST_CASE("GetFatTable, NonEmptyFatTable") {
     REQUIRE("file2.txt" == filesFat[1].name);
     REQUIRE(teststr.size() == filesFat[1].size);
 }
+
+
+
+//TODO :: teste para apagar arquivo
